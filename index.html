@@ -50,16 +50,21 @@ button{
     cursor:pointer;
 }
 .buttons {
-    display: flex;
-    justify-content: center;
-    gap: 40px;   /* 👈 controls space between Yes & No */
+  position: relative;         /* 👈 makes #no absolute position relative to this box */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  height: 60px;               /* 👈 reserves vertical space so layout stays nice */
 }
 
 #yes{
     background:#ff4d7d;
     color:white;
-    margin-right:15px;
+    margin: 0;
+
 }
+    
 #yes {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -70,9 +75,12 @@ button{
 }
 
 #no{
-    background:#e5e5e5;
-    color:black;
-    position:absolute;
+  background:#e5e5e5;
+  color:black;
+  position:absolute;
+  left: calc(50% + 70px);     /* 👈 starts to the right of “Yes” */
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .note{
@@ -104,14 +112,17 @@ button{
 
 <script>
 const noBtn = document.getElementById("no");
-const card = document.getElementById("card");
+const buttonsBox = document.querySelector(".buttons");
+
 
 function moveButton(){
-    const cardRect = card.getBoundingClientRect();
+    const boxRect = buttonsBox.getBoundingClientRect();
     const btnRect = noBtn.getBoundingClientRect();
 
-    const maxX = cardRect.width - btnRect.width - 20;
-    const maxY = cardRect.height - btnRect.height - 20;
+
+    const maxX = boxRect.width - btnRect.width;
+    const maxY = boxRect.height - btnRect.height;
+
 
     const x = Math.random() * maxX;
     const y = Math.random() * maxY;
