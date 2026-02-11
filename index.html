@@ -22,8 +22,10 @@
       border-radius:20px;
       text-align:center;
       width:420px;
+      height:420px;              /* gives the "No" button a full roam area */
       box-shadow:0 20px 50px rgba(0,0,0,0.1);
-      position:relative;
+      position:relative;         /* needed for absolute positioning inside */
+      overflow:hidden;           /* keeps button/heart visuals clean */
     }
 
     .emoji{
@@ -34,7 +36,7 @@
     h1{
       font-size:24px;
       font-weight:600;
-      margin-bottom:25px;
+      margin:0 0 18px 0;         /* tighter so less empty space */
     }
 
     button{
@@ -45,14 +47,16 @@
       cursor:pointer;
     }
 
-    /* Buttons layout (this keeps Yes/No spaced like the reference) */
+    /* Button row: this keeps YES nicely placed (not centered alone) */
     .buttons{
       display:flex;
       justify-content:center;
       align-items:center;
-      gap:40px;          /* spacing like your example */
-      height:60px;       /* keeps a stable area for the moving button */
-      margin-bottom:10px;
+      gap:22px;
+      height:60px;
+      margin:0;
+      position:relative;
+      z-index:2;                 /* keep buttons above gif if overlap */
     }
 
     #yes{
@@ -62,30 +66,31 @@
     }
 
     #yes:hover{
-      transform: scale(1.15);
+      transform: scale(1.12);
       box-shadow:0 0 15px rgba(255,105,180,0.6);
     }
 
-    /* IMPORTANT: No stays in the flex row (NOT absolute), so Yes won't center alone */
+    /* No is ABSOLUTE so it can roam anywhere on the white card */
     #no{
       background:#e5e5e5;
       color:black;
-      position:relative;
-      transition: transform 0.08s linear;
+      position:absolute;
+      z-index:3;
+      transition: left 0.08s linear, top 0.08s linear;
     }
 
-    /* Centered GIF */
+    /* GIF */
     #loveGif{
       display:none;
       width:260px;
-      margin:25px auto 0 auto;
+      margin:12px auto 0 auto;   /* reduced space between text + gif */
       border-radius:15px;
     }
 
     .note{
       font-size:14px;
       color:#777;
-      margin-top:20px;
+      margin-top:14px;
     }
 
     /* floating hearts */
@@ -108,6 +113,7 @@
 
     <div class="buttons" id="buttonsBox">
       <button id="yes">Yes</button>
+      <!-- No is kept here in HTML for semantics, but will be positioned absolute via JS -->
       <button id="no">No</button>
     </div>
 
@@ -117,29 +123,53 @@
   </div>
 
   <script>
+    const card = document.getElementById("card");
     const noBtn = document.getElementById("no");
     const yesBtn = document.getElementById("yes");
     const buttonsBox = document.getElementById("buttonsBox");
     const gif = document.getElementById("loveGif");
     const question = document.getElementById("question");
 
-    function moveNoButton() {
-      const boxRect = buttonsBox.getBoundingClientRect();
-      const btnRect = noBtn.getBoundingClientRect();
+    // Place the "No" button initially EXACTLY where it appears in the row,
+    // then convert it to absolute so it can roam the entire card.
+    function lockNoButtonPosition() {
+      const cardRect = card.getBoundingClientRect();
+      const noRect = noBtn.getBoundingClientRect();
 
-      // Move within the button area without breaking layout
-      const maxMoveX = (boxRect.width - btnRect.width) / 2;
-      const maxMoveY = (boxRect.height - btnRect.height) / 2;
+      const left = noRect.left - cardRect.left;
+      const top  = noRect.top  - cardRect.top;
 
-      const x = (Math.random() * 2 - 1) * maxMoveX; // -max to +max
-      const y = (Math.random() * 2 - 1) * maxMoveY;
-
-      noBtn.style.transform = `translate(${x}px, ${y}px)`;
+      noBtn.style.left = `${left}px`;
+      noBtn.style.top  = `${top}px`;
     }
 
-    // Make "No" run away on hover / near-click
+    // Keep it correct on load & resize
+    window.addEventListener("load", lockNoButtonPosition);
+    window.addEventListener("resize", lockNoButtonPosition);
+
+    function moveNoButton() {
+      const cardRect = card.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+
+      // Padding so it doesn't go flush to the edges
+      const padding = 16;
+
+      const maxX = cardRect.width - btnRect.width - padding * 2;
+      const maxY = cardRect.height - btnRect.height - padding * 2;
+
+      const x = padding + Math.random() * maxX;
+      const y = padding + Math.random() * maxY;
+
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top  = `${y}px`;
+    }
+
+    // Make "No" run away on hover and on tap/press
     ["mouseenter","mouseover","pointerenter","mousedown","touchstart"].forEach(evt => {
-      noBtn.addEventListener(evt, moveNoButton, { passive: true });
+      noBtn.addEventListener(evt, (e) => {
+        e.preventDefault();
+        moveNoButton();
+      }, { passive: false });
     });
 
     function createHeart() {
@@ -162,11 +192,11 @@
     yesBtn.addEventListener("click", function () {
       question.innerHTML = "YAYYYYY ❤️😘";
 
-      // hide both buttons area
+      // hide buttons
       yesBtn.style.display = "none";
       noBtn.style.display = "none";
 
-      // show gif
+      // show gif (closer to text now)
       gif.style.display = "block";
 
       // start hearts once
@@ -177,6 +207,7 @@
   </script>
 </body>
 </html>
+
 
 
 
