@@ -1,0 +1,58 @@
+body{
+  margin:0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  background: linear-gradient(135deg, #ffd7e6, #ffeaf2);
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+}
+
+.card{
+  background:white;
+  padding:30px;
+  border-radius:20px;
+  text-align:center;
+  width: min(600px, 90vw);
+  box-shadow: 0 20px 40px rgba(0,0,0,.15);
+  position:relative;
+  overflow:hidden;
+}
+
+button{
+  padding:12px 22px;
+  border:none;
+  border-radius:999px;
+  font-size:16px;
+  cursor:pointer;
+}
+
+.yes{
+  background:#ff3b7a;
+  color:white;
+}
+
+.no{
+  background:#eee;
+  position:relative;
+}
+
+.hidden{ display:none; }
+
+/* ❤️ FLOATING HEARTS */
+.hearts{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+
+.hearts span{
+  position:absolute;
+  bottom:-30px;
+  animation: floatUp linear forwards;
+}
+
+@keyframes floatUp{
+  0%{ transform:translateY(0); opacity:0; }
+  10%{ opacity:1; }
+  100%{ transform:translateY(-420px); opacity:0; }
+}
