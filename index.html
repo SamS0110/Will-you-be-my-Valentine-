@@ -1,175 +1,182 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Will you be my valentine?</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Will you be my valentine?</title>
 
-<style>
-body{
-    margin:0;
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:linear-gradient(to bottom,#ffd6e7,#ffeef5);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-}
+  <style>
+    body{
+      margin:0;
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      background:linear-gradient(to bottom,#ffd6e7,#ffeef5);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    }
 
-.card{
-    background:white;
-    padding:40px 30px;
-    border-radius:20px;
-    text-align:center;
-    width:420px;
-    box-shadow:0 20px 50px rgba(0,0,0,0.1);
-    position:relative;
-}
+    .card{
+      background:white;
+      padding:40px 30px;
+      border-radius:20px;
+      text-align:center;
+      width:420px;
+      box-shadow:0 20px 50px rgba(0,0,0,0.1);
+      position:relative;
+    }
 
-    #loveGif {
-    display: none;
-    width: 260px;
-    margin: 25px auto 0 auto;
-}
+    .emoji{
+      font-size:55px;
+      margin-bottom:10px;
+    }
 
-.emoji{
-    font-size:55px;
-    margin-bottom:10px;
-}
+    h1{
+      font-size:24px;
+      font-weight:600;
+      margin-bottom:25px;
+    }
 
-h1{
-    font-size:24px;
-    font-weight:600;
-    margin-bottom:25px;
-}
+    button{
+      padding:10px 22px;
+      border:none;
+      border-radius:25px;
+      font-size:15px;
+      cursor:pointer;
+    }
 
-button{
-    padding:10px 22px;
-    border:none;
-    border-radius:25px;
-    font-size:15px;
-    cursor:pointer;
-}
-.buttons {
-  position: relative;         /* 👈 makes #no absolute position relative to this box */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 40px;
-  height: 60px;               /* 👈 reserves vertical space so layout stays nice */
-}
+    /* Buttons layout (this keeps Yes/No spaced like the reference) */
+    .buttons{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:40px;          /* spacing like your example */
+      height:60px;       /* keeps a stable area for the moving button */
+      margin-bottom:10px;
+    }
 
-#yes{
-    background:#ff4d7d;
-    color:white;
-    margin: 0;
+    #yes{
+      background:#ff4d7d;
+      color:white;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
 
-}
-    
-#yes {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
+    #yes:hover{
+      transform: scale(1.15);
+      box-shadow:0 0 15px rgba(255,105,180,0.6);
+    }
 
-#yes:hover {
-    transform: scale(1.15);
-    box-shadow: 0 0 15px rgba(255, 105, 180, 0.6);
-}
+    /* IMPORTANT: No stays in the flex row (NOT absolute), so Yes won't center alone */
+    #no{
+      background:#e5e5e5;
+      color:black;
+      position:relative;
+      transition: transform 0.08s linear;
+    }
 
-#no{
-  background:#e5e5e5;
-  color:black;
-  position:absolute;
-  left: calc(50% + 70px);     /* 👈 starts to the right of “Yes” */
-  top: 50%;
-  transform: translateY(-50%);
-}
+    /* Centered GIF */
+    #loveGif{
+      display:none;
+      width:260px;
+      margin:25px auto 0 auto;
+      border-radius:15px;
+    }
 
-.note{
-    font-size:12px;
-    color:#777;
-    margin-top:60px;
-}
-</style>
+    .note{
+      font-size:14px;
+      color:#777;
+      margin-top:20px;
+    }
+
+    /* floating hearts */
+    .heart{
+      position:fixed;
+      bottom:0;
+      font-size:26px;
+      pointer-events:none;
+      opacity:1;
+      transition: transform 3s linear, opacity 3s linear;
+    }
+  </style>
 </head>
 
 <body>
-
-<div class="card" id="card">
+  <div class="card" id="card">
     <div class="emoji">🥺👉👈</div>
 
-    <h1>Eshah will you be my valentine?</h1>
+    <h1 id="question">Eshah will you be my valentine?</h1>
 
-    <div class="buttons">
-    <button id="yes">Yes</button>
-    <button id="no">No</button>
-</div>
- 
-    <img id="loveGif" src="love.gif">
+    <div class="buttons" id="buttonsBox">
+      <button id="yes">Yes</button>
+      <button id="no">No</button>
+    </div>
 
-
+    <img id="loveGif" src="love.gif" alt="love gif">
 
     <div class="note">"No" seems a bit shy 🫣</div>
-</div>
+  </div>
 
-<script>
-const noBtn = document.getElementById("no");
-const buttonsBox = document.querySelector(".buttons");
+  <script>
+    const noBtn = document.getElementById("no");
+    const yesBtn = document.getElementById("yes");
+    const buttonsBox = document.getElementById("buttonsBox");
+    const gif = document.getElementById("loveGif");
+    const question = document.getElementById("question");
 
+    function moveNoButton() {
+      const boxRect = buttonsBox.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
 
-function moveButton(){
-    const boxRect = buttonsBox.getBoundingClientRect();
-    const btnRect = noBtn.getBoundingClientRect();
+      // Move within the button area without breaking layout
+      const maxMoveX = (boxRect.width - btnRect.width) / 2;
+      const maxMoveY = (boxRect.height - btnRect.height) / 2;
 
+      const x = (Math.random() * 2 - 1) * maxMoveX; // -max to +max
+      const y = (Math.random() * 2 - 1) * maxMoveY;
 
-    const maxX = boxRect.width - btnRect.width;
-    const maxY = boxRect.height - btnRect.height;
+      noBtn.style.transform = `translate(${x}px, ${y}px)`;
+    }
 
-
-    const x = Math.random() * maxX;
-    const y = Math.random() * maxY;
-
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
-}
-
-noBtn.addEventListener("mouseover", moveButton);
-noBtn.addEventListener("click", moveButton);
-
-document.getElementById("yes").addEventListener("click", function () {
-
-    document.querySelector("h1").innerHTML = "YAYYYYY ❤️😘";
-
-    // hide buttons
-    document.getElementById("yes").style.display = "none";
-    noBtn.style.display = "none";
-
-    // show gif
-    document.getElementById("loveGif").style.display = "block";
-    setInterval(createHeart, 300);
-
-});
+    // Make "No" run away on hover / near-click
+    ["mouseenter","mouseover","pointerenter","mousedown","touchstart"].forEach(evt => {
+      noBtn.addEventListener(evt, moveNoButton, { passive: true });
+    });
 
     function createHeart() {
-    const heart = document.createElement("div");
-    heart.innerHTML = "❤️";
-    heart.style.position = "fixed";
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.bottom = "0px";
-    heart.style.fontSize = "26px";
-    heart.style.opacity = "1";
-    heart.style.transition = "transform 3s linear, opacity 3s linear";
-    document.body.appendChild(heart);
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.textContent = Math.random() > 0.5 ? "❤️" : "😘";
+      heart.style.left = Math.random() * 100 + "vw";
+      document.body.appendChild(heart);
 
-    setTimeout(() => {
+      setTimeout(() => {
         heart.style.transform = "translateY(-100vh)";
         heart.style.opacity = "0";
-    }, 50);
+      }, 50);
 
-    setTimeout(() => {
-        heart.remove();
-    }, 3000);
-}
+      setTimeout(() => heart.remove(), 3000);
+    }
 
-</script>
+    let heartsInterval = null;
 
+    yesBtn.addEventListener("click", function () {
+      question.innerHTML = "YAYYYYY ❤️😘";
+
+      // hide both buttons area
+      yesBtn.style.display = "none";
+      noBtn.style.display = "none";
+
+      // show gif
+      gif.style.display = "block";
+
+      // start hearts once
+      if (!heartsInterval) {
+        heartsInterval = setInterval(createHeart, 300);
+      }
+    });
+  </script>
 </body>
 </html>
+
+
+
