@@ -2,62 +2,94 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Valentine?</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Will you be my Valentine?</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main class="wrap">
+  <main class="page">
     <section class="card" id="card">
-      <div class="bear" aria-hidden="true">🐻‍❄️<span class="heart">💗</span></div>
+      <div class="icon" aria-hidden="true">
+        <div class="face">😺</div>
+        <div class="heart">💗</div>
+      </div>
 
-      <h1 id="question">Sam, will you be my valentine?</h1>
+      <h1 class="title" id="question">Eshah will you be my valentine?</h1>
 
-      <div class="btnRow" id="btnRow">
+      <div class="buttons" id="buttons">
         <button class="btn yes" id="yesBtn">Yes</button>
         <button class="btn no" id="noBtn">No</button>
       </div>
 
-      <p class="hint">psst… try clicking “No” 😈</p>
+      <p class="hint" id="hint">"No" seems a bit shy🫣</p>
 
-      <div class="yay hidden" id="yay">
-        <h2>YAY!! 💞</h2>
-        <p>See you on Valentine’s Day 😌</p>
-        <!-- Replace this image with your own -->
-        <img src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" alt="Celebration gif">
-      </div>
+      <div class="result hidden" id="result">
+  <h2 class="yay">YAYYY! 😘❤️</h2>
+
+  <img
+    class="gif"
+    src="love.gif"
+    alt="Cute love gif"
+  />
+</div>
+      <div class="hearts hidden" id="hearts" aria-hidden="true"></div>
+
+
     </section>
   </main>
 
   <script>
     const yesBtn = document.getElementById("yesBtn");
-    const noBtn  = document.getElementById("noBtn");
-    const btnRow = document.getElementById("btnRow");
-    const yay    = document.getElementById("yay");
-    const q      = document.getElementById("question");
+    const noBtn = document.getElementById("noBtn");
+    const result = document.getElementById("result");
+    const question = document.getElementById("question");
+    const buttons = document.getElementById("buttons");
+    const hint = document.getElementById("hint");
+    const hearts = document.getElementById("hearts");
 
-    function moveNoButton() {
-      const maxX = 260;   // how far it can run
-      const maxY = 140;
+let heartsTimer;
 
-      const x = Math.floor((Math.random() * (maxX * 2)) - maxX);
-      const y = Math.floor((Math.random() * (maxY * 2)) - maxY);
+function spawnHeart() {
+  const s = document.createElement("span");
+  s.textContent = "❤️";
+  s.style.left = Math.random() * 100 + "%";
+  s.style.fontSize = (16 + Math.random() * 26) + "px";
+  s.style.animationDuration = (2.2 + Math.random() * 1.8) + "s";
+  hearts.appendChild(s);
+  setTimeout(() => s.remove(), 4500);
+}
+
+function startHearts() {
+  hearts.classList.remove("hidden");
+  for (let i = 0; i < 12; i++) spawnHeart();
+  heartsTimer = setInterval(spawnHeart, 180);
+}
+
+    function moveNo() {
+      // keep it inside the card-ish area
+      const maxX = 220;
+      const maxY = 90;
+      const x = Math.floor(Math.random() * (maxX * 2 + 1)) - maxX;
+      const y = Math.floor(Math.random() * (maxY * 2 + 1)) - maxY;
 
       noBtn.style.transform = `translate(${x}px, ${y}px)`;
     }
 
-    // Runs away on hover (desktop) + touch (mobile)
-    noBtn.addEventListener("mouseenter", moveNoButton);
-    noBtn.addEventListener("touchstart", (e) => { e.preventDefault(); moveNoButton(); }, { passive: false });
-
-    // Optional: if they manage to click "No", still move it
-    noBtn.addEventListener("click", (e) => { e.preventDefault(); moveNoButton(); });
+    noBtn.addEventListener("mouseenter", moveNo);
+    noBtn.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      moveNo();
+    }, { passive: false });
+    noBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      moveNo();
+    });
 
     yesBtn.addEventListener("click", () => {
-      q.classList.add("hidden");
-      btnRow.classList.add("hidden");
-      document.querySelector(".hint").classList.add("hidden");
-      yay.classList.remove("hidden");
+      question.classList.add("hidden");
+      buttons.classList.add("hidden");
+      hint.classList.add("hidden");
+      result.classList.remove("hidden");
     });
   </script>
 </body>
