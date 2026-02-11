@@ -17,6 +17,11 @@ body{
   position:relative;
   overflow:hidden;
 }
+.icon.big-emoji{
+  font-size: 38px;   /* adjust if you want bigger/smaller */
+  line-height: 1;
+  margin-bottom: 10px;
+}
 
 button{
   padding:12px 22px;
@@ -24,11 +29,17 @@ button{
   border-radius:999px;
   font-size:16px;
   cursor:pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .yes{
   background:#ff3b7a;
   color:white;
+}
+
+.yes:hover{
+  transform: scale(1.08);
+  box-shadow: 0 14px 28px rgba(255,59,122,.35);
 }
 
 .no{
