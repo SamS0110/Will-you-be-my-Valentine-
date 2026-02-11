@@ -25,6 +25,12 @@ body{
     position:relative;
 }
 
+    #loveGif {
+    display: none;
+    width: 260px;
+    margin: 25px auto 0 auto;
+}
+
 .emoji{
     font-size:55px;
     margin-bottom:10px;
@@ -48,6 +54,14 @@ button{
     background:#ff4d7d;
     color:white;
     margin-right:15px;
+}
+#yes {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#yes:hover {
+    transform: scale(1.15);
+    box-shadow: 0 0 15px rgba(255, 105, 180, 0.6);
 }
 
 #no{
@@ -74,9 +88,8 @@ button{
     <button id="yes">Yes</button>
     <button id="no">No</button>
  
-    <img id="loveGif"
-     src="love.gif"
-     style="display:none; width:250px; margin:20px auto;">
+    <img id="loveGif" src="love.gif">
+
 
 
     <div class="note">"No" seems a bit shy 🫣</div>
@@ -103,11 +116,41 @@ function moveButton(){
 noBtn.addEventListener("mouseover", moveButton);
 noBtn.addEventListener("click", moveButton);
 
-document.getElementById("yes").addEventListener("click", function(){
-    document.querySelector("h1").innerHTML = "YAYYY! ❤️😘";
+document.getElementById("yes").addEventListener("click", function () {
+
+    document.querySelector("h1").innerHTML = "YAYYYYY ❤️😘";
+
+    // hide buttons
+    document.getElementById("yes").style.display = "none";
     noBtn.style.display = "none";
+
+    // show gif
     document.getElementById("loveGif").style.display = "block";
+    setInterval(createHeart, 300);
+
 });
+
+    function createHeart() {
+    const heart = document.createElement("div");
+    heart.innerHTML = "❤️";
+    heart.style.position = "fixed";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.bottom = "0px";
+    heart.style.fontSize = "26px";
+    heart.style.opacity = "1";
+    heart.style.transition = "transform 3s linear, opacity 3s linear";
+    document.body.appendChild(heart);
+
+    setTimeout(() => {
+        heart.style.transform = "translateY(-100vh)";
+        heart.style.opacity = "0";
+    }, 50);
+
+    setTimeout(() => {
+        heart.remove();
+    }, 3000);
+}
+
 </script>
 
 </body>
