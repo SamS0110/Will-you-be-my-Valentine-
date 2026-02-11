@@ -49,6 +49,11 @@ button{
     font-size:15px;
     cursor:pointer;
 }
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 40px;   /* 👈 controls space between Yes & No */
+}
 
 #yes{
     background:#ff4d7d;
@@ -85,8 +90,10 @@ button{
 
     <h1>Eshah will you be my valentine?</h1>
 
+    <div class="buttons">
     <button id="yes">Yes</button>
     <button id="no">No</button>
+</div>
  
     <img id="loveGif" src="love.gif">
 
