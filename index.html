@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Will you be my valentine?</title>
+
+<style>
+body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(to bottom,#ffd6e7,#ffeef5);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.card{
+    background:white;
+    padding:40px 30px;
+    border-radius:20px;
+    text-align:center;
+    width:420px;
+    box-shadow:0 20px 50px rgba(0,0,0,0.1);
+    position:relative;
+}
+
+.emoji{
+    font-size:55px;
+    margin-bottom:10px;
+}
+
+h1{
+    font-size:24px;
+    font-weight:600;
+    margin-bottom:25px;
+}
+
+button{
+    padding:10px 22px;
+    border:none;
+    border-radius:25px;
+    font-size:15px;
+    cursor:pointer;
+}
+
+#yes{
+    background:#ff4d7d;
+    color:white;
+    margin-right:15px;
+}
+
+#no{
+    background:#e5e5e5;
+    color:black;
+    position:absolute;
+}
+
+.note{
+    font-size:12px;
+    color:#777;
+    margin-top:60px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+    <div class="emoji">🐱💗</div>
+    <h1>nirali will you be my valentine?</h1>
+
+    <button id="yes">Yes</button>
+    <button id="no">No</button>
+
+    <div class="note">"No" seems a bit shy 🫣</div>
+</div>
+
+<script>
+const noBtn = document.getElementById("no");
+const card = document.getElementById("card");
+
+function moveButton(){
+    const cardRect = card.getBoundingClientRect();
+    const btnRect = noBtn.getBoundingClientRect();
+
+    const maxX = cardRect.width - btnRect.width - 20;
+    const maxY = cardRect.height - btnRect.height - 20;
+
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
+
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+}
+
+noBtn.addEventListener("mouseover", moveButton);
+noBtn.addEventListener("click", moveButton);
+
+document.getElementById("yes").addEventListener("click", function(){
+    document.querySelector("h1").innerHTML = "YAYYYYY 💖";
+    noBtn.style.display = "none";
+});
+</script>
+
+</body>
+</html>
